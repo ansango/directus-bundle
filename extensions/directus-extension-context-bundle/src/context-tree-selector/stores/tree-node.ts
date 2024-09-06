@@ -3,17 +3,17 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import { type Ref, computed, ref } from 'vue';
-import { defineStore } from 'pinia';
-import { useApi } from '@directus/extensions-sdk';
-import { mapInputParentChildren, nodesToRemove } from '../utils';
-import { toggleChildrenSelection, updateParentSelection, compareNodes } from '../utils';
-import type { NodeDirectusPreview, NodeEl, NodeMapped } from './tree-node.types';
+import { type Ref, computed, ref } from "vue";
+import { defineStore } from "pinia";
+import { useApi } from "@directus/extensions-sdk";
+import { mapInputParentChildren, nodesToRemove } from "../utils";
+import { toggleChildrenSelection, updateParentSelection, compareNodes } from "../utils";
+import type { NodeDirectusPreview, NodeEl, NodeMapped } from "./tree-node.types";
 
 const getItems = async <T>(api: ReturnType<typeof useApi>, collectionName: string) =>
   await api.get<{ data: T }>(`/items/${collectionName}`);
 
-export const useTreeNodeStore = defineStore('tree-node', () => {
+export const useTreeNodeStore = defineStore("tree-node", () => {
   /**
    * The API object used for making API calls.
    */
@@ -51,7 +51,7 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
     junctionField: string,
     relationField: string,
     primaryKey: Ref<string>,
-    types?: Ref<string[]>
+    types: Ref<string[] | undefined>
   ) => {
     isLoading.value = true;
     try {
@@ -60,10 +60,10 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
         await getItems<Array<Record<string, any>>>(api, currentRelationCollection),
       ]);
 
-      const data = resNodes.data.data.filter(node => types?.value?.includes(node.type) || !types);
+      const data = resNodes.data.data.filter((node) => types?.value?.includes(node.type) || !types.value);
       const junctionData = resJunction.data.data;
 
-      nodes.value = data.map(node => ({
+      nodes.value = data.map((node) => ({
         ...node,
         selected: false,
         collapsed: false,
@@ -71,25 +71,25 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
       }));
 
       const _selectedNodes = junctionData
-        .filter(item => item[junctionField] === parseInt(primaryKey.value))
-        .map(item => item[relationField]) as number[];
+        .filter((item) => item[junctionField] === parseInt(primaryKey.value))
+        .map((item) => item[relationField]) as number[];
       selectedIds.value = _selectedNodes;
 
       const _previousDirectus = junctionData
-        .filter(item => item[junctionField] === parseInt(primaryKey.value))
-        .map(item => ({ id: item[relationField], junctionId: item.id }));
+        .filter((item) => item[junctionField] === parseInt(primaryKey.value))
+        .map((item) => ({ id: item[relationField], junctionId: item.id }));
 
       previousDirectusNodes.value = _previousDirectus.map(({ id, junctionId }) => {
-        const nodeValue = nodes.value.find(n => n.id === id);
+        const nodeValue = nodes.value.find((n) => n.id === id);
         return {
           id: nodeValue?.id,
           value: nodeValue?.value,
           junctionId,
         };
       }) as NodeDirectusPreview[];
-      console.log(nodes.value);
-      nodes.value.forEach(node => {
-        const nodeId = selectedIds.value.find(n => n.toString() === node.id.toString());
+
+      nodes.value.forEach((node) => {
+        const nodeId = selectedIds.value.find((n) => n.toString() === node.id.toString());
         if (!nodeId) return;
         node.selected = true;
         toggleChildrenSelection(node, nodes.value, true);
@@ -109,7 +109,7 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
    * @param id - The ID of the node to toggle the selection for.
    */
   const toggleNodeSelection = (id: string) => {
-    const node = nodes.value.find(n => n.id === id);
+    const node = nodes.value.find((n) => n.id === id);
     if (!node) return;
 
     const newSelected = !node.selected;
@@ -127,7 +127,7 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
    * @param id - The ID of the node to toggle.
    */
   const toggleNodeCollapse = (id: string) => {
-    const node = nodes.value.find(n => n.id === id);
+    const node = nodes.value.find((n) => n.id === id);
     if (!node) return;
 
     node.collapsed = !node.collapsed;
@@ -138,24 +138,23 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
    * @param id - The ID of the tree node.
    * @returns The collapsed state of the tree node, or undefined if the node is not found.
    */
-  const getIsCollapsed = (id: string | null) => nodes.value.find(node => node.id === id)?.collapsed;
+  const getIsCollapsed = (id: string | null) => nodes.value.find((node) => node.id === id)?.collapsed;
 
   /**
    * Returns the selected state of a node with the specified ID.
    * @param id - The ID of the node.
    * @returns The selected state of the node, or undefined if the node is not found.
    */
-  const getIsSelected = (id: string | null) => nodes.value.find(node => node.id === id)?.selected;
+  const getIsSelected = (id: string | null) => nodes.value.find((node) => node.id === id)?.selected;
 
-  const getIsIntermediate = (id: string | null) =>
-    nodes.value.find(node => node.id === id)?.indeterminate;
+  const getIsIntermediate = (id: string | null) => nodes.value.find((node) => node.id === id)?.indeterminate;
 
   /**
    * Computed property that returns an array of selected nodes.
    *
    * @returns {TreeNode[]} An array of selected nodes.
    */
-  const selectedNodes = computed(() => nodes.value.filter(node => node.selected));
+  const selectedNodes = computed(() => nodes.value.filter((node) => node.selected));
   /**
    * Computed property that returns an array of selected nodes without their own children.
    *
@@ -163,7 +162,7 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
    */
   const selectedNodesWithoutOwnChildren = computed(() => {
     const nodes = nodesToRemove(selectedNodes.value);
-    return selectedNodes.value.filter(node => !nodes.map(node => node.id).includes(node.id));
+    return selectedNodes.value.filter((node) => !nodes.map((node) => node.id).includes(node.id));
   });
   /**
    * An array of selected node IDs.
@@ -173,9 +172,7 @@ export const useTreeNodeStore = defineStore('tree-node', () => {
    *
    * @returns An array of selected node IDs.
    */
-  const selectedNodesIds = computed(() =>
-    selectedNodesWithoutOwnChildren.value.map(node => node.id)
-  );
+  const selectedNodesIds = computed(() => selectedNodesWithoutOwnChildren.value.map((node) => node.id));
   /**
    * Computed property that maps the input parent children to a new array of NodeMapped objects.
    */

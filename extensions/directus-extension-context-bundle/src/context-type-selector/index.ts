@@ -2,10 +2,10 @@ import { defineInterface } from "@directus/extensions-sdk";
 import InterfaceComponent from "./interface.vue";
 
 export default defineInterface({
-  id: "select-type",
-  name: "Custom",
+  id: "context-type-selector",
+  name: "Content Type Selector",
   icon: "box",
-  description: "This is my custom interface!",
+  description: "This is a custom interface for selecting content types.",
   component: InterfaceComponent,
   options: {
     standard: [

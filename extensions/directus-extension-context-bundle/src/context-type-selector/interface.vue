@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { sortBy } from "lodash";
-import { ref, onMounted, toRefs } from "vue";
-import { useApi } from "@directus/extensions-sdk";
-import { useAsyncChoices } from "./use-async-choices";
+import { toRefs } from "vue";
+import { useAsyncChoices } from "../composables";
 
 const props = withDefaults(
   defineProps<{
     value?: string[];
-    collectionName?: string;
+    collectionName: string;
   }>(),
   {}
 );
@@ -15,7 +14,7 @@ const { collectionName } = toRefs(props);
 const emit = defineEmits(["input"]);
 
 const choices = useAsyncChoices({
-  collectionName: collectionName.value,
+  collectionName: props.collectionName,
 });
 
 function updateValue(value: string[]) {
@@ -35,16 +34,7 @@ function updateValue(value: string[]) {
     multiple
     :model-value="value"
     :items="choices"
-    :disabled="disabled"
-    :show-deselect="allowNone"
-    :placeholder="placeholder"
-    :allow-other="allowOther"
     :close-on-content-click="false"
-    :multiple-preview-threshold="previewThreshold"
     @update:model-value="updateValue($event)"
-  >
-    <template v-if="icon" #prepend>
-      <v-icon :name="icon" />
-    </template>
-  </v-select>
+  />
 </template>

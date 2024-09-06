@@ -1,5 +1,6 @@
 import { useApi } from "@directus/extensions-sdk";
 import { onMounted, ref } from "vue";
+import { getItems } from "../utils";
 
 type Option = {
   text: string;
@@ -10,12 +11,16 @@ type NodeType = {
   type: string;
 };
 
-const getItems = async <T>(api: ReturnType<typeof useApi>, collectionName: string) =>
-  await api.get<{ data: T }>(`/items/${collectionName}`);
+type ChoicesValue = Option[] | null;
 
+/**
+ * Custom composable function that fetches async choices for a given collection.
+ * @param props - The properties object containing the collection name.
+ * @returns A ref object containing the async choices.
+ */
 export const useAsyncChoices = (props: { collectionName: string }) => {
   const api = useApi();
-  const choices = ref<Option[] | null>(null);
+  const choices = ref<ChoicesValue>(null);
 
   onMounted(async () => {
     try {

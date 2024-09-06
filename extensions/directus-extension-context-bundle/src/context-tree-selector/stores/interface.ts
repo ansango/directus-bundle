@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { toRefs } from "vue";
-import { useRelationM2M } from "../../composables";
+import { useRelationM2M } from "../../lib/composables";
 
 export interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sortBy } from "lodash";
 import { toRefs } from "vue";
-import { useAsyncChoices } from "../composables";
+import { useAsyncChoices } from "../lib";
 
 const props = withDefaults(
   defineProps<{

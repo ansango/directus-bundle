@@ -9,9 +9,7 @@ import { useApi } from "@directus/extensions-sdk";
 import { mapInputParentChildren, nodesToRemove } from "../utils";
 import { toggleChildrenSelection, updateParentSelection, compareNodes } from "../utils";
 import type { NodeDirectusPreview, NodeEl, NodeMapped } from "./tree-node.types";
-
-const getItems = async <T>(api: ReturnType<typeof useApi>, collectionName: string) =>
-  await api.get<{ data: T }>(`/items/${collectionName}`);
+import { getItems } from "../../lib";
 
 export const useTreeNodeStore = defineStore("tree-node", () => {
   /**

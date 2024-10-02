@@ -106,8 +106,13 @@ Suggested name for the collection: `context_web`
 
 ##### Field Configuration
 
+<img src="./docs/sample_key.png" alt="drawing" width="320"/>
+
 1. **Primary Key:**
    - Keep `id` as autoincremental
+
+<img src="./docs/sample_context.png" alt="drawing" width="320"/>
+<img src="./docs/sample_context_filter.png" alt="drawing" width="320"/>
 
 2. **Context:**
    - Field name: `context`
@@ -116,10 +121,6 @@ Suggested name for the collection: `context_web`
    - Additional configuration:
      - Enable "Select Types" to filter context nodes
      - Filtering is done by the `type` field defined in the `context` collection
-
-<img src="./docs/sample_key.png" alt="drawing" width="320"/>
-<img src="./docs/sample_context.png" alt="drawing" width="320"/>
-<img src="./docs/sample_context_filter.png" alt="drawing" width="320"/>
 
 #### Result
 

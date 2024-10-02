@@ -50,10 +50,13 @@ Suggested name for the collection: `context_type`
 
 ##### Field Configuration
 
+<img src="./docs/type_key.png" alt="drawing" width="400"/>
 
 1. **Key:**
    - Change from `id` to `key` (to later assign key values)
    - Type: Manually entered string
+
+<img src="./docs/type_parent.png" alt="drawing" width="400"/>
 
 1. **Parent:**
    - Field name: `parent`
@@ -61,17 +64,18 @@ Suggested name for the collection: `context_type`
    - Relation: Recursive with `context_type`
    - Description: Allows creating a hierarchy of context types
 
-<img src="./docs/type_key.png" alt="drawing" width="300"/>
-<img src="./docs/type_parent.png" alt="drawing" width="320"/>
-
 #### 2. Defining the Context Collection
 
 Suggested name for the collection: `context`
 
 ##### Field Configuration
 
+<img src="./docs/context_key.png" alt="drawing" width="400"/>
+
 1. **Primary Key:**
    - Keep `id` as autoincremental
+
+<img src="./docs/context_type.png" alt="drawing" width="400"/>
 
 2. **Type:**
    - Field name: `type` (important to maintain this name)
@@ -79,21 +83,20 @@ Suggested name for the collection: `context`
    - Relation: With the `context_type` collection
    - Description: Allows filtering by context type
 
+<img src="./docs/context_value.png" alt="drawing" width="400"/>
+
 3. **Value:**
    - Field name: `value`
    - Type: String
    - Description: Stores the context value
+
+<img src="./docs/context_parent.png" alt="drawing" width="400"/>
 
 4. **Parent:**
    - Field name: `parent`
    - Type: Relational (M2O)
    - Relation: Recursive with `context`
    - Description: Allows creating a hierarchical structure of contexts
-
-<img src="./docs/context_key.png" alt="drawing" width="320"/>
-<img src="./docs/context_type.png" alt="drawing" width="320"/>
-<img src="./docs/context_value.png" alt="drawing" width="320"/>
-<img src="./docs/context_parent.png" alt="drawing" width="320"/>
 
 #### 3. Creating a Specific Context (example: Web Page)
 
@@ -139,6 +142,7 @@ The following images show the result of the context tree selector with the defin
 
 - The Context Tree Selector allows linking relationships with the previously formed context tree.
 - The "Select Types" option narrows down the tree to show only relevant nodes based on the selected context type.
+- By default if you not select types, all types are shown.
 
 This structure allows creating a flexible and hierarchical context system, with the ability to filter by specific types, which is useful for organizing contextual information in complex applications such as websites or content management systems.
 

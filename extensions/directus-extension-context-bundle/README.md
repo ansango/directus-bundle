@@ -122,17 +122,18 @@ Suggested name for the collection: `context_web`
 
 The following images show the result of the context tree selector with the defined context types and contexts.
 
-> First one shows the full context tree, 
-
 <img src="./docs/result.png" alt="drawing" width="320"/>
 
-> the second one shows how to change the context tree filtered by types,
+> First one shows the full context tree, 
 
 <img src="./docs/result_types.png" alt="drawing" width="320"/>
 
-> and the last one shows the context tree filtered by types and with the selected context nodes.
+
+> the second one shows how to change the context tree filtered by types,
 
 <img src="./docs/result_filtered.png" alt="drawing" width="320"/>
+
+> and the last one shows the context tree filtered by types and with the selected context nodes.
 
 #### Important Notes
 

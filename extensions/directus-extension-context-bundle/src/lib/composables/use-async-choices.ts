@@ -1,5 +1,5 @@
 import { useApi } from "@directus/extensions-sdk";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch, watchEffect, type Ref } from "vue";
 import { getItems } from "../utils";
 
 type Option = {
@@ -11,32 +11,38 @@ type NodeType = {
   type: string;
 };
 
-type ChoicesValue = Option[] | null;
+export type ChoicesValue = Option[] | null;
 
 /**
  * Custom composable function that fetches async choices for a given collection.
  * @param props - The properties object containing the collection name.
  * @returns A ref object containing the async choices.
  */
-export const useAsyncChoices = (props: { collectionName: string }) => {
+export const useAsyncChoices = (collectionName: Ref<string>) => {
   const api = useApi();
   const choices = ref<ChoicesValue>(null);
 
-  onMounted(async () => {
+  const fetchItems = async (collectionName: string) => {
     try {
       const {
         data: { data },
-      } = await getItems<NodeType[]>(api, props.collectionName);
+      } = await getItems<NodeType[]>(api, collectionName);
       const types = data.filter((field) => field.type);
       const uniqueTypes = [...new Set(types.map((field) => field.type))];
-      choices.value = uniqueTypes.map((type) => ({
+
+      return uniqueTypes.map((type) => ({
         text: type,
         value: type,
       }));
     } catch (error) {
       console.error(error);
-      choices.value = null;
+      return null;
     }
+  };
+
+  watchEffect(async () => {
+    const items = await fetchItems(collectionName.value);
+    choices.value = items;
   });
 
   return choices;

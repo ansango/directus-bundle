@@ -9,7 +9,7 @@ import { useApi } from "@directus/extensions-sdk";
 import { mapInputParentChildren, nodesToRemove } from "../utils";
 import { toggleChildrenSelection, updateParentSelection, compareNodes } from "../utils";
 import type { NodeDirectusPreview, NodeEl, NodeMapped } from "./tree-node.types";
-import { getItems } from "../../lib";
+import { getDataAndJunctionData } from "../../lib";
 
 export const useTreeNodeStore = defineStore("tree-node", () => {
   /**
@@ -53,13 +53,12 @@ export const useTreeNodeStore = defineStore("tree-node", () => {
   ) => {
     isLoading.value = true;
     try {
-      const [resNodes, resJunction] = await Promise.all([
-        await getItems<NodeEl[]>(api, collection),
-        await getItems<Array<Record<string, any>>>(api, currentRelationCollection),
-      ]);
-
-      const data = resNodes.data.data.filter((node) => types?.value?.includes(node.type) || !types.value);
-      const junctionData = resJunction.data.data;
+      const { data, junctionData } = await getDataAndJunctionData({
+        api,
+        collection,
+        currentRelationCollection,
+        types,
+      });
 
       nodes.value = data.map((node) => ({
         ...node,
@@ -71,6 +70,7 @@ export const useTreeNodeStore = defineStore("tree-node", () => {
       const _selectedNodes = junctionData
         .filter((item) => item[junctionField] === parseInt(primaryKey.value))
         .map((item) => item[relationField]) as number[];
+
       selectedIds.value = _selectedNodes;
 
       const _previousDirectus = junctionData

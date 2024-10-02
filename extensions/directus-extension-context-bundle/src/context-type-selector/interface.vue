@@ -13,9 +13,7 @@ const props = withDefaults(
 const { collectionName } = toRefs(props);
 const emit = defineEmits(["input"]);
 
-const choices = useAsyncChoices({
-  collectionName: props.collectionName,
-});
+const choices = useAsyncChoices(collectionName);
 
 function updateValue(value: string[]) {
   const sortedValue = sortBy(value, (val) => {
@@ -28,7 +26,8 @@ function updateValue(value: string[]) {
 </script>
 
 <template>
-  <v-notice v-if="!collectionName || !choices" type="warning"> missing collectionName or no choices </v-notice>
+  <v-notice v-if="!collectionName" type="warning">Please select a Collection with a Type field</v-notice>
+  <v-notice v-else-if="!choices" type="warning">No choices available</v-notice>
   <v-select
     v-else
     multiple
